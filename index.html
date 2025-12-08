@@ -328,6 +328,85 @@
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
-  </script>
+
+    const legalContent = {
+            // COMENTARIO: Asegúrate de reemplazar "[Nombre de tu Página de Bingo]" y "[Fecha Actual]"
+            terms: `
+                <h2 class="text-xl font-bold text-gray-900 mb-3">Términos y Condiciones del Servicio OMEGA Bingo</h2>
+                <p class="text-xs text-gray-500 mb-4">Última actualización: 04/12/25</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">1. Aceptación de los Términos</h3>
+                <p>Al acceder y utilizar los servicios de OMEGA Bingo, usted acepta estar sujeto a estos Términos y Condiciones, así como a nuestra Política de Privacidad.</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">2. Uso de la Cuenta y Seguridad</h3>
+                <p>Usted es responsable de mantener la confidencialidad de su contraseña y de todas las actividades que ocurran bajo su cuenta. Se compromete a notificarnos inmediatamente sobre cualquier uso no autorizado de su cuenta.</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">3. Jurisdicción y Uso Legal (Venezuela / EEUU)</h3>
+                <ul class="list-disc list-inside space-y-1 ml-4">
+                    <li><strong>Juegos de Azar:</strong> Al participar, usted declara que cumple con la mayoría de edad legal para participar en juegos de azar en su jurisdicción. Es su responsabilidad asegurarse de que la participación en bingos en línea es legal en su lugar de residencia, tanto en Venezuela como en Estados Unidos, o cualquier otra ubicación.</li>
+                    <li><strong>Riesgo:</strong> La participación es bajo su propio riesgo. OMEGA Bingo no se hace responsable por cualquier pérdida incurrida.</li>
+                </ul>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">4. Verificación y Documentación del Cliente</h3>
+                <p>Para garantizar la integridad del juego y la seguridad de las transacciones, podemos solicitar documentación adicional (como comprobantes de pago o identificación) para verificar su identidad y sus reservas. Esta información será tratada de acuerdo con nuestra Política de Privacidad.</p>
+
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">5. Uso del Código y Licencia</h3>
+                <p>El código fuente y los elementos de diseño (imágenes, logos, etc.) de esta plataforma son propiedad privada de OMEGA Bingo Masson© o sus licenciatarios. El acceso a este sistema está estrictamente limitado al uso como cliente para la compra de tablas. Queda terminantemente prohibida la copia, reproducción, distribución, ingeniería inversa o cualquier uso no autorizado del código privado de la página web sin el consentimiento expreso y por escrito de los propietarios de OMEGA Bingo.</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">6. Limitación de Responsabilidad</h3>
+                <p>OMEGA Bingo no se hace responsable de las pérdidas o daños que surjan de la falta de medidas de seguridad adecuadas en los dispositivos del usuario, o de fallos técnicos fuera de nuestro control razonable, incluyendo interrupciones en el servicio de Internet, fallos de red o errores de pago móvil de terceros.</p>
+                `,
+            privacy: `
+                <h2 class="text-xl font-bold text-gray-900 mb-3">Política de Privacidad de OMEGA Bingo</h2>
+                <p class="text-xs text-gray-500 mb-4">Última actualización: 4/12/25</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">1. Información que Recopilamos</h3>
+                <p>Recopilamos información que usted nos proporciona directamente al registrarse, reservar números y realizar pagos. Esto puede incluir su nombre, dirección de correo electrónico, número de teléfono, detalles de pago y los documentos de verificación (como comprobantes de pago) que nos envíe.</p>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">2. Uso de la Información y Cumplimiento Legal</h3>
+                <ul class="list-disc list-inside space-y-1 ml-4">
+                    <li>Procesar sus reservas y pagos.</li>
+                    <li>Verificar su identidad y elegibilidad para jugar.</li>
+                    <li>Comunicarnos con usted sobre el estado de su cuenta y premios.</li>
+                    <li>Cumplir con nuestras obligaciones legales y reglamentarias, especialmente las relacionadas con la prevención de fraude y el juego responsable, en las jurisdicciones aplicables (incluyendo Venezuela y EEUU).</li>
+                </ul>
+
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">3. Almacenamiento y Seguridad de los Datos (Clave de Confianza)</h3>
+                <p>La seguridad de su información personal es nuestra prioridad. Implementamos medidas de seguridad técnicas y organizativas robustas para proteger los datos contra el acceso no autorizado, la alteración, la divulgación o la destrucción.</p>
+                <ul class="list-disc list-inside space-y-1 ml-4">
+                    <li><strong>Alojamiento Seguro:</strong> Todos los datos y documentos de verificación (comprobantes de pago) se almacenan en servidores seguros operados por proveedores de servicios certificados que cumplen con estándares de seguridad reconocidos internacionalmente ISO 27001., que manejan la información de acuerdo a estándares globales.</li>
+                    <li><strong>Cifrado:</strong> Utilizamos el cifrado de datos (SSL/TLS) para proteger la transmisión de datos entre su navegador y nuestros servidores. Los datos almacenados también están sujetos a medidas de cifrado en reposo cuando es posible.</li>
+                    <li><strong>Acceso Restringido:</strong> El acceso a la información personal identificable está estrictamente limitado al personal autorizado de OMEGA Bingo que requiere acceso para realizar sus funciones laborales.</li>
+                    <li><strong>Gestión de Documentos:</strong> Los comprobantes de clientes se almacenan en un sistema de gestión de documentos seguro e interno (Cloudinary privado) y nunca en servicios de alojamiento de archivos públicos o genéricos como MediaFire, Google Drive personal o Dropbox personal.</li>
+                </ul>
+                
+                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">4. Retención de Datos</h3>
+                <p>Retenemos su información personal solo durante el tiempo necesario para cumplir con los fines para los que fue recopilada, incluyendo cualquier período de retención legal o reglamentario requerido por las autoridades de licencias de juego y fiscales.</p>
+                `
+        };
+
+        function showLegalModal(type) {
+            const modal = document.getElementById('legalModal');
+            const title = document.getElementById('legalModalTitle');
+            const body = document.getElementById('legalModalBody');
+
+            if (type === 'terms') {
+                title.textContent = 'Términos y Condiciones';
+                body.innerHTML = legalContent.terms;
+            } else if (type === 'privacy') {
+                title.textContent = 'Política de Privacidad';
+                body.innerHTML = legalContent.privacy;
+            } else {
+                return;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function hideLegalModal() {
+            document.getElementById('legalModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
+
