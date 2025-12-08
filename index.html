@@ -1,249 +1,163 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMEGA Bingo - La Mejor Sala Online</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMEGA Bingo - Página Oficial</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper.js CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <!-- Swiper.js JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9fafb; /* Fondo neutro para contraste */
+    }
 
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f3f4f6; }
-        /* Gradientes estilo YoBingo */
-        .bg-omega-dark { background-color: #1a0e38; }
-        .bg-omega-purple { background-color: #4c1d95; }
-        .text-omega-gold { color: #fbbf24; }
-        
-        /* Animaciones */
-        .hover-scale { transition: transform 0.2s; }
-        .hover-scale:hover { transform: scale(1.05); }
-
-        /* Estilos heredados de tu código original para los Modales */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; overflow-y: auto; padding: 20px 0; }
-        .modal-content { background-color: white; border-radius: 1rem; padding: 1.5rem; width: 90%; max-width: 500px; position: relative; }
-        
-        /* Bolas de Bingo */
-        .bingo-ball { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-weight: 900; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .status-available .bingo-ball { background-color: #6b21a8; color: white; }
-        .status-selected .bingo-ball { background-color: #fbbf24; color: black; transform: scale(1.1); }
-        .status-reserved .bingo-ball { background-color: #f97316; color: white; }
-        .status-sold .bingo-ball { background-color: #16a34a; color: white; opacity: 0.6; pointer-events: none; }
-    </style>
+    /* Para efectos y animaciones adicionales si quieres */
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s;
+    }
+  </style>
 </head>
-<body class="antialiased">
+<body class="text-gray-800">
 
-    <nav class="bg-omega-dark text-white py-3 px-4 sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <img src="assets/img/logo.png" alt="Omega" class="h-10 w-auto" onerror="this.src='https://placehold.co/100x40?text=OMEGA'">
-                </div>
-                <div class="hidden md:flex gap-6 text-sm font-bold tracking-wide">
-                    <a href="#" class="text-pink-500 hover:text-pink-400">INICIO</a>
-                    <a href="#" class="hover:text-gray-300">JUEGOS</a>
-                    <a href="#" class="hover:text-gray-300">GANADORES</a>
-                    <a href="#" class="hover:text-gray-300">PROMOCIONES</a>
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="document.getElementById('adminSecretLock').click()" class="text-xs text-gray-400 hover:text-white">Admin</button>
-                <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg transition">REGISTRARSE</button>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg transition">ENTRAR</button>
-            </div>
-        </div>
-    </nav>
-
-    <header class="relative bg-purple-900 overflow-hidden h-[400px] md:h-[500px]">
-        <img src="assets/img/banner-hero.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60" onerror="this.src='https://placehold.co/1920x600/4c1d95/ffffff?text=Banner+Navidad'">
-        
-        <div class="relative max-w-7xl mx-auto h-full flex flex-col justify-center px-6">
-            <div class="max-w-xl text-white">
-                <h1 class="text-5xl font-black mb-4 leading-tight">
-                    <span class="text-yellow-400">¡GRAN BINGO</span><br>NAVIDEÑO!
-                </h1>
-                <p class="text-xl mb-6 font-bold">Por registrarte participa por un Bono Extra.</p>
-                <button onclick="document.getElementById('section-games').scrollIntoView({behavior: 'smooth'})" class="bg-green-500 hover:bg-green-600 text-white text-xl font-bold py-3 px-8 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.6)] transform hover:scale-105 transition">
-                    JUGAR AHORA
-                </button>
-            </div>
-        </div>
-        
-        <div class="absolute bottom-0 w-full">
-            <svg viewBox="0 0 1440 120" fill="#f3f4f6" class="w-full h-12 block"><path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
-        </div>
-    </header>
-
-    <section class="text-center py-8 bg-[#f3f4f6]">
-        <h2 class="text-2xl font-bold text-gray-800">¡El mayor Bote de Bingo!</h2>
-        <div class="bg-omega-dark text-white inline-block px-8 py-3 rounded-full mt-4 shadow-xl border-4 border-blue-500 relative">
-            <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-xs font-bold px-2 py-0.5 rounded text-white">BOTE COMPARTIDO</span>
-            <span class="text-3xl font-black tracking-widest">Bs. 300.000,00</span>
-        </div>
-    </section>
-
-    <section id="section-games" class="max-w-7xl mx-auto px-4 pb-16">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover-scale group relative">
-                <div class="bg-gradient-to-r from-red-600 to-pink-600 p-4 text-center h-24 flex items-center justify-center relative">
-                    <h3 class="text-white font-black text-2xl drop-shadow-md">SUPER OMEGA</h3>
-                    <div class="absolute -bottom-4 bg-white p-1 rounded-full border-2 border-red-500">
-                        <div class="bg-red-600 text-white font-bold w-8 h-8 flex items-center justify-center rounded-full text-xs">90</div>
-                    </div>
-                </div>
-                <div class="pt-8 pb-6 px-4 text-center">
-                    <p class="text-sm text-gray-500 font-bold mb-1">PREMIO MAYOR</p>
-                    <div class="text-2xl font-black text-indigo-900 bg-indigo-50 py-1 rounded-lg mb-4">Bs. 145.000</div>
-                    <p class="text-xs text-gray-500 mb-4 h-10">Abierta las 24 horas. ¡Grandes premios con SuperBote!</p>
-                    <button onclick="showCardSelectionModal()" class="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-2 rounded-full shadow-lg group-hover:shadow-pink-500/50 transition">
-                        COMPRAR TABLA
-                    </button>
-                    <p class="text-[10px] mt-2 text-gray-400">Precio: Bs. 300</p>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover-scale group relative">
-                <div class="bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-center h-24 flex items-center justify-center relative">
-                    <h3 class="text-white font-black text-2xl drop-shadow-md">SUERTE OMEGA</h3>
-                    <div class="absolute -bottom-4 bg-white p-1 rounded-full border-2 border-blue-500">
-                        <div class="bg-blue-600 text-white font-bold w-8 h-8 flex items-center justify-center rounded-full text-xs">75</div>
-                    </div>
-                </div>
-                <div class="pt-8 pb-6 px-4 text-center">
-                    <p class="text-sm text-gray-500 font-bold mb-1">ACUMULADO</p>
-                    <div class="text-2xl font-black text-indigo-900 bg-indigo-50 py-1 rounded-lg mb-4">Bs. 9.270,39</div>
-                    <p class="text-xs text-gray-500 mb-4 h-10">Bote acumulado especial con cartones económicos.</p>
-                    <button onclick="showCardSelectionModal()" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-2 rounded-full shadow-lg group-hover:shadow-blue-500/50 transition">
-                        JUGAR AHORA
-                    </button>
-                    <p class="text-[10px] mt-2 text-gray-400">Precio: Bs. 150</p>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover-scale group relative">
-                <div class="bg-gradient-to-r from-orange-500 to-yellow-500 p-4 text-center h-24 flex items-center justify-center relative">
-                    <h3 class="text-white font-black text-2xl drop-shadow-md">FORTUNA</h3>
-                    <div class="absolute -bottom-4 bg-white p-1 rounded-full border-2 border-orange-500">
-                        <div class="bg-orange-500 text-white font-bold w-8 h-8 flex items-center justify-center rounded-full text-xs">90</div>
-                    </div>
-                </div>
-                <div class="pt-8 pb-6 px-4 text-center">
-                    <p class="text-sm text-gray-500 font-bold mb-1">BOTE RAPIDO</p>
-                    <div class="text-2xl font-black text-indigo-900 bg-indigo-50 py-1 rounded-lg mb-4">Bs. 4.980,00</div>
-                    <p class="text-xs text-gray-500 mb-4 h-10">Abierta durante la noche. ¡Opta al bote acumulado!</p>
-                    <button onclick="showCardSelectionModal()" class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-2 rounded-full shadow-lg group-hover:shadow-orange-500/50 transition">
-                        JUGAR AHORA
-                    </button>
-                    <p class="text-[10px] mt-2 text-gray-400">Precio: Bs. 200</p>
-                </div>
-            </div>
-
-             <div class="bg-white rounded-2xl shadow-xl overflow-hidden hover-scale group relative">
-                <div class="bg-gradient-to-r from-purple-600 to-fuchsia-600 p-4 text-center h-24 flex items-center justify-center relative">
-                    <h3 class="text-white font-black text-2xl drop-shadow-md">YOBINGUERA</h3>
-                    <div class="absolute -bottom-4 bg-white p-1 rounded-full border-2 border-purple-500">
-                        <div class="bg-purple-600 text-white font-bold w-8 h-8 flex items-center justify-center rounded-full text-xs">90</div>
-                    </div>
-                </div>
-                <div class="pt-8 pb-6 px-4 text-center">
-                    <p class="text-sm text-gray-500 font-bold mb-1">SALA ECONÓMICA</p>
-                    <div class="text-2xl font-black text-indigo-900 bg-indigo-50 py-1 rounded-lg mb-4">Bs. 50,00</div>
-                    <p class="text-xs text-gray-500 mb-4 h-10">Nuestra sala más económica, cartones desde 1 céntimo.</p>
-                    <button onclick="showCardSelectionModal()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-2 rounded-full shadow-lg group-hover:shadow-purple-500/50 transition">
-                        JUGAR AHORA
-                    </button>
-                    <p class="text-[10px] mt-2 text-gray-400">Precio: Bs. 50</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
-            <div class="md:w-1/2">
-                <img src="assets/img/show-yobingo.jpg" class="rounded-xl shadow-2xl border-4 border-purple-500" onerror="this.src='https://placehold.co/600x400/333/fff?text=Show+En+Vivo'">
-            </div>
-            <div class="md:w-1/2">
-                <h2 class="text-3xl font-black text-yellow-400 mb-4">El Show de OMEGA Bingo</h2>
-                <p class="text-lg font-bold mb-2">¡Vive el bingo con streaming en vivo!</p>
-                <p class="text-gray-300 mb-6 text-sm leading-relaxed">
-                    Disfruta junto a nuestros presentadores de una experiencia emocionante en El Show de Omega. Juega tus partidas de bingo con la compañía y animación más divertidas: mini juegos con premios, especiales temáticos... ¡y muchas sorpresas más!
-                </p>
-                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transition animate-pulse">
-                    REGÍSTRATE Y NO TE LO PIERDAS
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-7xl mx-auto px-4 py-12 text-gray-600 text-sm leading-relaxed">
-        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Promociones y Grandes Premios todos los días en OMEGA</h3>
-        <p class="mb-4 text-center">Bienvenido a <strong>OMEGA Bingo</strong>, uno de los principales sitios web de bingo online. Somos uno de los pocos sitios totalmente licenciados. Nuestro sitio web seguro te permite disfrutar jugando a tus juegos favoritos.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-            <img src="https://placehold.co/400x150/e9d5ff/6b21a8?text=Bingo+Garantizado" class="rounded-lg shadow">
-            <img src="https://placehold.co/400x150/fbcfe8/be185d?text=Bingo+De+Gorra" class="rounded-lg shadow">
-            <img src="https://placehold.co/400x150/bfdbfe/1d4ed8?text=Super+Bote" class="rounded-lg shadow">
-        </div>
-    </section>
-
-    <footer class="bg-omega-dark text-white pt-12 pb-6 border-t-4 border-yellow-400">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            
-            <div class="flex justify-center gap-6 mb-8">
-                <i class="fab fa-whatsapp text-3xl text-green-500 hover:text-green-400 cursor-pointer"></i>
-                <i class="fab fa-facebook text-3xl text-blue-600 hover:text-blue-500 cursor-pointer"></i>
-                <i class="fab fa-instagram text-3xl text-pink-500 hover:text-pink-400 cursor-pointer"></i>
-            </div>
-
-            <div class="flex justify-center gap-4 mb-8">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-8 bg-white p-1 rounded">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-8 bg-white p-1 rounded">
-                <img src="assets/img/logo.png" class="h-10">
-            </div>
-
-            <div class="text-xs text-gray-400 space-x-4 mb-4">
-                <a href="#" onclick="showLegalModal('terms')" class="hover:text-white">Términos y Condiciones</a> | 
-                <a href="#" onclick="showLegalModal('privacy')" class="hover:text-white">Política de Privacidad</a> |
-                <a href="#" class="hover:text-white">Juego Responsable</a>
-            </div>
-
-            <p class="text-[10px] text-gray-500">
-                © 2025 OMEGA Bingo. Operado por Masson Digital. Autorizado y regulado.
-                <br>Juega con responsabilidad. +18
-            </p>
-        </div>
-    </footer>
-
-    <div id="cardSelectionModal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                <h3 class="text-xl font-bold text-gray-800">Selecciona tus Tablas</h3>
-                <button onclick="hideCardSelectionModal()" class="text-2xl text-gray-500">&times;</button>
-            </div>
-            <div class="flex justify-between text-[10px] font-bold text-gray-500 mb-4 px-2">
-                <span class="flex items-center"><div class="w-3 h-3 bg-purple-700 rounded-full mr-1"></div> Libre</span>
-                <span class="flex items-center"><div class="w-3 h-3 bg-yellow-400 rounded-full mr-1"></div> Tuya</span>
-                <span class="flex items-center"><div class="w-3 h-3 bg-orange-500 rounded-full mr-1"></div> Ocupada</span>
-                <span class="flex items-center"><div class="w-3 h-3 bg-green-600 rounded-full mr-1"></div> Vendida</span>
-            </div>
-            <div id="cardListContainer" class="grid grid-cols-6 sm:grid-cols-8 gap-2 max-h-[60vh] overflow-y-auto p-1"></div>
-            <div class="mt-4 border-t pt-4">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="text-gray-600 font-bold">Total:</span>
-                    <span id="totalCostDisplay" class="text-2xl font-black text-green-600">Bs. 0,00</span>
-                </div>
-                <button onclick="preparePayment()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg shadow-lg hover:bg-purple-700 transition">CONTINUAR A PAGO</button>
-            </div>
-        </div>
+  <!-- HEADER -->
+  <header class="bg-purple-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+    <h1 class="text-3xl font-extrabold uppercase tracking-widest">OMEGA Bingo</h1>
+    <div class="flex gap-4">
+      <!-- Botón de inicio / entrada -->
+      <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded font-bold uppercase shadow-lg">Entrar al Grupo</a>
+      <!-- Botón Juegos -->
+      <button onclick="scrollToSeccion('juegos')" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold uppercase shadow-lg">Juegos</button>
     </div>
+  </header>
 
-    <script src="js/main.js"></script>
+  <!-- SECCIÓN PRINCIPAL: Presentación -->
+  <section class="bg-purple-100 py-12 text-center px-4" id="inicio">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-4">¡Bienvenido a OMEGA Bingo!</h2>
+    <p class="text-lg mb-8">Reserva tus tablas, participa en nuestros juegos y únete a nuestro grupo de WhatsApp para estar al día.</p>
+    <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-full font-bold shadow-lg uppercase text-white text-xl">Reservar Ahora</a>
+  </section>
+
+  <!-- SECCIÓN DE GRUPOS -->
+  <section class="py-12 px-4 bg-white" id="juegos">
+    <h3 class="text-3xl font-extrabold text-center mb-8">Grupos y Juegos</h3>
+    <!-- Carrusel -->
+    <div class="swiper mySwiper max-w-6xl mx-auto px-4">
+      <div class="swiper-wrapper">
+        <!-- Ejemplo de grupo. Repite y edita aquí -->
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+          <img src="https://via.placeholder.com/300x200.png?text=Grupo+A" class="w-full rounded mb-4" alt="Grupo A" />
+          <h4 class="text-xl font-bold mb-2">Grupo A</h4>
+          <p class="mb-4">Únete a nuestro grupo para participar en sorteos y más.</p>
+          <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+        </div>
+        <!-- Añade más grupos -->
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+          <img src="https://via.placeholder.com/300x200.png?text=Grupo+B" class="w-full rounded mb-4" alt="Grupo B" />
+          <h4 class="text-xl font-bold mb-2">Grupo B</h4>
+          <p class="mb-4">Participa en sorteos y promociones exclusivas.</p>
+          <a href="https://wa.me/584yyyyyyyy" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+        </div>
+        <!-- Puedes agregar aquí más grupos con sus links y fotos -->
+      </div>
+      <!-- Botones de navegación del carrusel -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN GANADORES -->
+  <section class="py-12 bg-gray-50 px-4" id="ganadores">
+    <h3 class="text-3xl font-extrabold text-center mb-8">Ganadores</h3>
+    <div class="max-w-4xl mx-auto grid gap-4">
+      <!-- Ejemplo de testimonios -->
+      <div class="bg-white p-4 rounded-lg shadow-lg cursor-pointer hover:bg-gray-100" onclick="mostrarGanador('Juan Pérez', 'https://i.imgur.com/tuimage1.png', 'Participó en el último juego y ganó Bs. 500!')">
+        <p class="font-bold">Juan Pérez</p>
+        <p>Participó en el último sorteo y ganó Bs. 500!</p>
+      </div>
+      <!-- Agrega más testimonios aquí -->
+    </div>
+  </section>
+
+  <!-- Modal Ganadores -->
+  <div id="modalGanador" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg max-w-xl w-full relative">
+      <button class="absolute top-2 right-2 text-gray-600" onclick="cerrarGanador()">&times;</button>
+      <h4 class="text-xl font-bold mb-4" id="nombreGanador"></h4>
+      <img src="" alt="Capture" class="w-full mb-4" id="imagenGanador" />
+      <p class="font-semibold" id="comentarioGanador"></p>
+    </div>
+  </div>
+
+  <!-- SECCIÓN PROMOCIONES -->
+  <section class="py-12 px-4 bg-white" id="promociones">
+    <h3 class="text-3xl font-extrabold text-center mb-8">Novedades y Promociones</h3>
+    <div class="max-w-4xl mx-auto space-y-4">
+      <!-- Ejemplo de promoción -->
+      <div class="bg-gray-100 p-4 rounded-lg shadow-lg">
+        <h4 class="font-bold mb-2">Nuevo Sorteo Navideño</h4>
+        <p>Participa en nuestro sorteo especial y gana grandes premios.</p>
+      </div>
+      <!-- Agrega más promociones -->
+    </div>
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bg-purple-900 text-white p-6 text-center">
+    <p>&copy; 2025 OMEGA Bingo. Todos los derechos reservados.</p>
+    <div class="mt-4 flex justify-center gap-4">
+      <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:underline">WhatsApp</a>
+      <a href="#" class="hover:underline">Facebook</a>
+      <a href="#" class="hover:underline">Instagram</a>
+    </div>
+  </footer>
+
+  <!-- SECCIÓN RESERVA (Modal) - Ya tienes implementado -->
+  <!-- Añadimos un botón en alguna parte para abrir la reserva -->
+  <!-- Puedes usar la función existente para abrir tus modales -->
+
+  <!-- Scripts para inicializar Swiper y funciones -->
+  <script>
+    // Inicializar Swiper
+    const swiper = new Swiper('.mySwiper', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }
+    });
+
+    // Función para scroll a sección
+    function scrollToSeccion(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Funciones para modal ganadores
+    function mostrarGanador(nombre, imagenUrl, comentario) {
+      document.getElementById('nombreGanador').innerText = nombre;
+      document.getElementById('imagenGanador').src = imagenUrl;
+      document.getElementById('comentarioGanador').innerText = comentario;
+      document.getElementById('modalGanador').classList.remove('hidden', 'opacity-0');
+      document.getElementById('modalGanador').classList.add('flex');
+    }
+
+    function cerrarGanador() {
+      document.getElementById('modalGanador').classList.add('hidden');
+      document.getElementById('modalGanador').classList.remove('flex');
+    }
+  </script>
 </body>
 </html>
