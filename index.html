@@ -44,7 +44,127 @@
     <p class="text-lg mb-8">Reserva tus tablas, participa en nuestros juegos y únete a nuestro grupo de WhatsApp para estar al día.</p>
     <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-full font-bold shadow-lg uppercase text-white text-xl">Reservar Ahora</a>
   </section>
+  
+    <title>Mi Carrusel de Ganadores</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+    <style>
+        /* --- ESTILOS PERSONALIZABLES --- */
+
+        /* Color de fondo y texto del contenedor principal del carrusel */
+        .ganadores-slider-container {
+            background-color: #1a0033; /* CAMBIA ESTE COLOR: Fondo oscuro como en la imagen */
+            padding: 20px 0;
+            color: #ffffff; /* CAMBIA ESTE COLOR: Color del texto */
+        }
+
+        .swiper-slide {
+            /* Ajusta el ancho de cada tarjeta si es necesario */
+            width: 250px; 
+            text-align: center;
+            /* Estilo para que el enlace cubra toda la tarjeta */
+        }
+
+        .winner-card-link {
+            text-decoration: none; /* Quita el subrayado del enlace */
+            color: inherit; /* Hereda el color de texto del padre */
+            display: block; /* Hace que el enlace sea un bloque */
+        }
+
+        .winner-image {
+            width: 80px;  /* CAMBIA EL TAMAÑO DE LA IMAGEN */
+            height: 80px;
+            border-radius: 50%; /* Hace la imagen redonda */
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #ffcc00; /* CAMBIA EL COLOR DEL BORDE DE LA IMAGEN */
+        }
+
+        .winner-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .winner-game {
+            font-size: 0.9em;
+            color: #ffcc00; /* CAMBIA EL COLOR DEL NOMBRE DEL JUEGO */
+            margin-bottom: 5px;
+        }
+
+        .winner-prize {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ganadores-slider-container">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <a href="https://tusitio.com/juego1" class="winner-card-link" target="_blank">
+                        <img src="ruta/a/tu/imagen1.png" alt="Ganador 1" class="winner-image">
+                        <div class="winner-info">
+                            <div class="winner-name">Juan P.</div>
+                            <div class="winner-game">Ruleta Rápida</div>
+                            <div class="winner-prize">1.200€</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://tusitio.com/juego2" class="winner-card-link" target="_blank">
+                        <img src="ruta/a/tu/imagen2.png" alt="Ganador 2" class="winner-image">
+                        <div class="winner-info">
+                            <div class="winner-name">Ana M.</div>
+                            <div class="winner-game">Bingo Loco</div>
+                            <div class="winner-prize">850€</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://tusitio.com/juego3" class="winner-card-link" target="_blank">
+                        <img src="ruta/a/tu/imagen3.png" alt="Ganador 3" class="winner-image">
+                        <div class="winner-info">
+                            <div class="winner-name">Carlos G.</div>
+                            <div class="winner-game">Tragaperras Zeus</div>
+                            <div class="winner-prize">3.500€</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://tusitio.com/juego4" class="winner-card-link" target="_blank">
+                        <img src="ruta/a/tu/imagen4.png" alt="Ganador 4" class="winner-image">
+                        <div class="winner-info">
+                            <div class="winner-name">Laura D.</div>
+                            <div class="winner-game">Blackjack VIP</div>
+                            <div class="winner-prize">2.100€</div>
+                        </div>
+                    </a>
+                </div>
+                </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        const swiper = new Swiper('.swiper', {
+            // Opciones del carrusel
+            slidesPerView: 'auto', // Muestra tantos slides como quepan
+            spaceBetween: 30, // Espacio entre cada slide (en píxeles)
+            centeredSlides: true, // Centra el slide activo
+            loop: true, // Hace que el carrusel sea infinito
+            autoplay: {
+                delay: 2500, // Tiempo en milisegundos antes de cambiar automáticamente
+                disableOnInteraction: false, // Sigue moviéndose después de que el usuario interactúe
+            },
+            // Puedes añadir más opciones según la documentación de Swiper
+        });
+  
   <!-- SECCIÓN DE GRUPOS -->
   <section class="py-12 px-4 bg-white" id="juegos">
     <h3 class="text-3xl font-extrabold text-center mb-8">Grupos y Juegos</h3>
