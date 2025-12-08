@@ -19,14 +19,58 @@
       background: #f9fafb;
     }
 
-    /* Estilo para hacer que el carrusel de ganadores se mueva suavemente (ticker) */
+    /* --- ANIMACIÓN DE FONDO (BOLAS FLOTANTES) --- */
+    .hero-section {
+        background: linear-gradient(135deg, #2e004f 0%, #6b00b6 100%); /* Gradiente Morado */
+        position: relative;
+        overflow: hidden;
+    }
+
+    .floating-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        animation: floatAnimation 10s infinite ease-in-out;
+        z-index: 1; /* Detrás del contenido */
+    }
+
+    /* Tamaños y posiciones variadas para las bolas */
+    .shape-1 { width: 100px; height: 100px; top: 10%; left: 5%; animation-duration: 12s; }
+    .shape-2 { width: 150px; height: 150px; bottom: 20%; right: 10%; animation-duration: 15s; }
+    .shape-3 { width: 60px; height: 60px; top: 40%; left: 80%; animation-duration: 8s; }
+    .shape-4 { width: 200px; height: 200px; top: -50px; right: 30%; animation-duration: 20s; opacity: 0.05; }
+    .shape-5 { width: 80px; height: 80px; bottom: 5%; left: 20%; animation-duration: 10s; background: rgba(255, 215, 0, 0.15); /* Bola dorada tenue */ }
+
+    @keyframes floatAnimation {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(20deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Ajustes Swiper */
     .swiper-ticker .swiper-wrapper {
       transition-timing-function: linear;
     }
-
+    
     .hover-scale:hover {
       transform: scale(1.05);
       transition: transform 0.3s;
+    }
+
+    /* Estilo para los puntos de paginación del banner principal */
+    .hero-pagination .swiper-pagination-bullet {
+        background: white;
+        opacity: 0.5;
+        width: 10px;
+        height: 10px;
+    }
+    .hero-pagination .swiper-pagination-bullet-active {
+        background: #fbbf24; /* Color amarillo/dorado */
+        opacity: 1;
+        width: 25px;
+        border-radius: 5px;
+        transition: width 0.3s;
     }
   </style>
 </head>
@@ -35,18 +79,17 @@
   <header class="bg-purple-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
     <h1 class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest">OMEGA Bingo</h1>
     <div class="flex gap-2 md:gap-4">
-      <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base">Entrar</a>
-      <button onclick="scrollToSeccion('juegos')" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base">Juegos</button>
+      <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base transition">Entrar</a>
+      <button onclick="scrollToSeccion('juegos')" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base transition">Juegos</button>
     </div>
   </header>
 
-  <section class="bg-[#1e0030] py-3 border-b-4 border-yellow-500 overflow-hidden">
+  <section class="bg-[#1e0030] py-3 border-b-4 border-yellow-500 overflow-hidden relative z-20">
     <div class="swiper swiper-ticker w-full">
       <div class="swiper-wrapper">
-        
         <div class="swiper-slide w-auto px-6">
-            <a href="https://chat.whatsapp.com/tu-enlace-aqui" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+            <a href="#" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador">
                 <div class="text-left leading-tight">
                     <p class="text-white font-bold text-sm">Maria L.</p>
                     <p class="text-yellow-400 text-xs font-bold uppercase">Bingo 75</p>
@@ -54,10 +97,9 @@
                 </div>
             </a>
         </div>
-
         <div class="swiper-slide w-auto px-6">
-            <a href="https://tusitio.com/juego2" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+            <a href="#" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador">
                 <div class="text-left leading-tight">
                     <p class="text-white font-bold text-sm">Carlos R.</p>
                     <p class="text-yellow-400 text-xs font-bold uppercase">Ruleta</p>
@@ -65,10 +107,9 @@
                 </div>
             </a>
         </div>
-
         <div class="swiper-slide w-auto px-6">
-            <a href="https://tusitio.com/juego3" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
-                <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+            <a href="#" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador">
                 <div class="text-left leading-tight">
                     <p class="text-white font-bold text-sm">Ana P.</p>
                     <p class="text-yellow-400 text-xs font-bold uppercase">Tragamonedas</p>
@@ -76,51 +117,90 @@
                 </div>
             </a>
         </div>
-
-        <div class="swiper-slide w-auto px-6">
-            <a href="https://tusitio.com/juego4" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
-                <img src="https://randomuser.me/api/portraits/men/85.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
-                <div class="text-left leading-tight">
-                    <p class="text-white font-bold text-sm">Luis G.</p>
-                    <p class="text-yellow-400 text-xs font-bold uppercase">Blackjack</p>
-                    <p class="text-white font-black text-sm">Ganó $350</p>
-                </div>
-            </a>
-        </div>
-        
       </div>
     </div>
   </section>
-  <section class="bg-purple-100 py-12 text-center px-4" id="inicio">
-    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-purple-900">¡Bienvenido a OMEGA Bingo!</h2>
-    <p class="text-lg mb-8 max-w-2xl mx-auto">Reserva tus tablas, participa en nuestros juegos y únete a nuestro grupo de WhatsApp para estar al día.</p>
-    <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-full font-bold shadow-lg uppercase text-white text-xl transition transform hover:scale-105 inline-block">Reservar Ahora</a>
+
+  <section class="hero-section py-8 md:py-12 relative" id="inicio">
+    
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    <div class="floating-shape shape-4"></div>
+    <div class="floating-shape shape-5"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">
+                ¡Bienvenido a <span class="text-yellow-400">OMEGA Bingo</span>!
+            </h2>
+            <p class="text-purple-200 mt-2 text-lg">Los mejores juegos y premios te esperan</p>
+        </div>
+
+        <div class="swiper hero-swiper w-full rounded-2xl shadow-2xl overflow-hidden border-4 border-white/20">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide relative">
+                    <a href="#reservas" class="block w-full h-full relative">
+                        <img src="https://via.placeholder.com/1200x500/4a1d96/ffffff?text=BONO+DE+BIENVENIDA+100%25" 
+                             class="w-full h-64 md:h-96 object-cover" alt="Promo 1">
+                        
+                        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg uppercase text-lg transition hover:scale-105 animate-bounce">
+                                ¡Jugar Ahora!
+                            </button>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="swiper-slide">
+                    <a href="#juegos" class="block w-full h-full">
+                        <img src="https://via.placeholder.com/1200x500/c026d3/ffffff?text=GRAN+SORTEO+NAVIDEÑO" 
+                             class="w-full h-64 md:h-96 object-cover" alt="Promo 2">
+                    </a>
+                </div>
+
+                <div class="swiper-slide">
+                    <a href="https://wa.me/tu-numero" target="_blank" class="block w-full h-full">
+                        <img src="https://via.placeholder.com/1200x500/2563eb/ffffff?text=ÚNETE+AL+GRUPO+VIP" 
+                             class="w-full h-64 md:h-96 object-cover" alt="Promo 3">
+                    </a>
+                </div>
+
+            </div>
+            
+            <div class="swiper-pagination hero-pagination"></div>
+            <div class="swiper-button-next text-white/70 hover:text-white"></div>
+            <div class="swiper-button-prev text-white/70 hover:text-white"></div>
+        </div>
+
+    </div>
   </section>
-   
   <section class="py-12 px-4 bg-white" id="juegos">
-    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Grupos y Juegos</h3>
+    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Nuestras Salas</h3>
     
     <div class="swiper mySwiperGroups max-w-6xl mx-auto px-4 pb-12">
       <div class="swiper-wrapper">
-        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
           <img src="grupoa.jpeg" onerror="this.src='https://via.placeholder.com/300x200?text=Grupo+A'" class="w-full h-48 object-cover rounded mb-4" alt="Grupo A" />
-          <h4 class="text-xl font-bold mb-2">Grupo A - Tarde</h4>
+          <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo A - Tarde</h4>
           <p class="mb-4 text-sm text-gray-600">Únete a nuestro grupo para participar en los sorteos de la tarde.</p>
-          <a href="https://chat.whatsapp.com/CIL8NiFHcbvAQwEw9Xwfiq" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+          <a href="https://chat.whatsapp.com/CIL8NiFHcbvAQwEw9Xwfiq" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
         </div>
 
-        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
           <img src="https://via.placeholder.com/300x200.png?text=Grupo+B" class="w-full h-48 object-cover rounded mb-4" alt="Grupo B" />
-          <h4 class="text-xl font-bold mb-2">Grupo B - Noche</h4>
+          <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo B - Noche</h4>
           <p class="mb-4 text-sm text-gray-600">Participa en sorteos nocturnos y promociones exclusivas.</p>
-          <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+          <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
         </div>
 
-        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
             <img src="https://via.placeholder.com/300x200.png?text=Grupo+C" class="w-full h-48 object-cover rounded mb-4" alt="Grupo C" />
-            <h4 class="text-xl font-bold mb-2">Grupo C - VIP</h4>
+            <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo C - VIP</h4>
             <p class="mb-4 text-sm text-gray-600">Mesas de alto valor y premios rápidos.</p>
-            <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+            <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
           </div>
       </div>
       
@@ -131,62 +211,82 @@
   </section>
 
   <section class="py-12 bg-purple-50 px-4" id="ganadores">
-    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Testimonios</h3>
-    <div class="max-w-4xl mx-auto grid gap-4">
-      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 flex items-center gap-4 transition" onclick="mostrarGanador('Juan Pérez', 'https://via.placeholder.com/400x300?text=Comprobante', '¡Increíble, pagaron al instante!')">
-        <div class="bg-green-100 p-3 rounded-full text-green-600 text-2xl font-bold">JD</div>
+    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Últimos Ganadores</h3>
+    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-4">
+      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition flex items-center gap-4 border-l-4 border-green-500" onclick="mostrarGanador('Juan Pérez', 'https://via.placeholder.com/400x300?text=Comprobante', '¡Increíble, pagaron al instante!')">
+        <div class="bg-green-100 p-4 rounded-full text-green-600 text-2xl font-bold">JP</div>
         <div>
-            <p class="font-bold text-lg">Juan Pérez</p>
-            <p class="text-gray-600">"Participé en el último sorteo y gané Bs. 500. ¡100% recomendado!"</p>
+            <p class="font-bold text-lg text-gray-800">Juan Pérez</p>
+            <p class="text-gray-500 text-sm italic">"Participé en el último sorteo y gané Bs. 500."</p>
         </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 flex items-center gap-4 transition">
-        <div class="bg-blue-100 p-3 rounded-full text-blue-600 text-2xl font-bold">MR</div>
+      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition flex items-center gap-4 border-l-4 border-blue-500">
+        <div class="bg-blue-100 p-4 rounded-full text-blue-600 text-2xl font-bold">MR</div>
         <div>
-            <p class="font-bold text-lg">María Rodriguez</p>
-            <p class="text-gray-600">"La atención es muy rápida y segura."</p>
+            <p class="font-bold text-lg text-gray-800">María Rodriguez</p>
+            <p class="text-gray-500 text-sm italic">"La atención es muy rápida y segura."</p>
         </div>
       </div>
     </div>
   </section>
 
-  <div id="modalGanador" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white p-6 rounded-lg max-w-md w-full relative shadow-2xl animate-fade-in-down">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-3xl font-bold" onclick="cerrarGanador()">&times;</button>
-      <h4 class="text-2xl font-bold mb-4 text-center text-purple-800" id="nombreGanador"></h4>
-      <div class="flex justify-center mb-4">
-          <img src="" alt="Capture" class="max-h-64 rounded shadow border" id="imagenGanador" />
+  <div id="modalGanador" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4 backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
+      <button class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold transition" onclick="cerrarGanador()">&times;</button>
+      <h4 class="text-2xl font-bold mb-4 text-center text-purple-900" id="nombreGanador"></h4>
+      <div class="flex justify-center mb-4 bg-gray-100 rounded-lg p-2">
+          <img src="" alt="Capture" class="max-h-64 object-contain" id="imagenGanador" />
       </div>
-      <p class="text-center italic text-gray-700" id="comentarioGanador"></p>
+      <p class="text-center text-gray-700 italic border-t pt-4" id="comentarioGanador"></p>
     </div>
   </div>
 
-  <footer class="bg-purple-900 text-white py-8 px-4 text-center">
-    <h2 class="text-2xl font-bold mb-4">OMEGA Bingo</h2>
-    <p class="text-purple-200 mb-6">&copy; 2025 OMEGA Bingo. Todos los derechos reservados.</p>
-    <div class="flex justify-center gap-6 text-2xl">
-      <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:text-green-400 transition"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-      <a href="#" class="hover:text-blue-400 transition">Facebook</a>
-      <a href="#" class="hover:text-pink-400 transition">Instagram</a>
+  <footer class="bg-purple-900 text-white py-10 px-4 text-center mt-auto border-t-4 border-yellow-500">
+    <h2 class="text-3xl font-extrabold mb-4 tracking-widest">OMEGA BINGO</h2>
+    <p class="text-purple-200 mb-8">&copy; 2025. Todos los derechos reservados.</p>
+    <div class="flex justify-center gap-8 text-xl">
+      <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:text-green-400 transition transform hover:-translate-y-1">WhatsApp</a>
+      <a href="#" class="hover:text-blue-400 transition transform hover:-translate-y-1">Facebook</a>
+      <a href="#" class="hover:text-pink-400 transition transform hover:-translate-y-1">Instagram</a>
     </div>
   </footer>
 
   <script>
-    // 1. Configuración de la Nueva Barra de Ganadores (Ticker)
+    // 1. Ticker de ganadores (Barra superior)
     const swiperTicker = new Swiper('.swiper-ticker', {
-      slidesPerView: 'auto', // Ajusta automáticamente el ancho
-      spaceBetween: 0,       // Sin espacio extra, lo manejamos con padding en el slide
-      loop: true,            // Infinito
-      speed: 4000,           // Velocidad lenta y constante
+      slidesPerView: 'auto',
+      spaceBetween: 0,
+      loop: true,
+      speed: 4000,
       autoplay: {
-        delay: 0,            // Sin pausa
-        disableOnInteraction: false, // Sigue rodando aunque toques
+        delay: 0,
+        disableOnInteraction: false,
       },
-      allowTouchMove: true,  // Permite arrastrar si el usuario quiere
+      allowTouchMove: true,
     });
 
-    // 2. Configuración del Carrusel de Grupos
+    // 2. NUEVO: Slider Hero (Banner Grande)
+    const heroSwiper = new Swiper('.hero-swiper', {
+        slidesPerView: 1,
+        loop: true,
+        effect: 'fade', // Efecto de desvanecimiento elegante
+        fadeEffect: { crossFade: true },
+        autoplay: {
+            delay: 5000, // Cambia cada 5 segundos
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".hero-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+
+    // 3. Slider de Grupos
     const swiperGroups = new Swiper('.mySwiperGroups', {
       slidesPerView: 1,
       spaceBetween: 20,
@@ -205,7 +305,7 @@
       }
     });
 
-    // Función scroll
+    // Función scroll suave
     function scrollToSeccion(id) {
       const element = document.getElementById(id);
       if (element) {
@@ -213,7 +313,7 @@
       }
     }
 
-    // Funciones Modal
+    // Modal
     function mostrarGanador(nombre, imagenUrl, comentario) {
       document.getElementById('nombreGanador').innerText = nombre;
       document.getElementById('imagenGanador').src = imagenUrl;
