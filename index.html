@@ -1,936 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OMEGA Bingo - Página Oficial</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=400;700;900&display=swap" rel="stylesheet" />
-    
-    <script>
-        // 🚨 CONFIGURACIÓN DE FIREBASE 🚨
-        const firebaseConfig = {
-            apiKey: "AIzaSyCwrGuhYZkfnH-Yva8CwaEMfEYhzCByrRA",
-            authDomain: "omegareserva369-34542.firebaseapp.com",
-            databaseURL: "https://omegareserva369-34542-default-rtdb.firebaseio.com",
-            projectId: "omegareserva369-34542",
-            storageBucket: "omegareserva369-34542.firebasestorage.app",
-            messagingSenderId: "1023263517856",
-            appId: "1:1023263517856:web:8dec670aac92b8693a6dc5"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-    </script>
-    
-    <style>
-        /* CSS PRINCIPAL */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f9fafb;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMEGA Bingo - Página Oficial</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet" />
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9fafb;
+    }
 
-        /* --- ESTILOS DE RESERVA / JUEGO (TOMADO DE LA SEGUNDA PÁGINA) --- */
-        .bingo-ball-reserved-page { 
-            width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; 
-            font-size: 18px; font-weight: 900; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
-            z-index: 2; position: relative;
-        }
-        .status-available .bingo-ball-reserved-page { background-color: #6b21a8; color: white; border: 2px solid #5b21b6; }
-        .status-selected .bingo-ball-reserved-page { background-color: #fcd34d; color: #1f2937; border: 2px solid #fbbf24; transform: scale(1.1); }
-        .status-reserved .bingo-ball-reserved-page { background-color: #f97316; color: white; border: 2px solid #ea580c; animation: pulse-orange 2s infinite; }
-        .status-sold .bingo-ball-reserved-page { background-color: #16a34a; color: white; border: 2px solid #15803d; }
-        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
-        .omega-title { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 3rem; line-height: 1; text-shadow: 2px 2px 0 #5b21b6; color: #fcd34d; }
-        #countdownTimer { font-size: 2.5rem; font-weight: 900; color: #fcd34d; text-shadow: 2px 2px 0 #5b21b6; }
-        .admin-panel { min-height: 100vh; background: #f3f4f6; padding: 2rem; }
-        .closed-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: white; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; text-align: center; color: #1f2937; }
-        canvas { border-bottom: 2px solid #5b21b6; background: transparent; touch-action: manipulation; }
-        /* FIN ESTILOS DE RESERVA / JUEGO */
+    /* Estilo para hacer que el carrusel de ganadores se mueva suavemente (ticker) */
+    .swiper-ticker .swiper-wrapper {
+      transition-timing-function: linear;
+    }
 
-        /* --- ESTILOS DE PÁGINA DE INICIO (HERO) --- */
-        .hero-section {
-            background: linear-gradient(135deg, #2e004f 0%, #6b00b6 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .floating-shape {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            animation: floatAnimation 10s infinite ease-in-out;
-            z-index: 1;
-        }
-
-        /* Tamaños y posiciones variadas para las bolas */
-        .shape-1 { width: 100px; height: 100px; top: 10%; left: 5%; animation-duration: 12s; }
-        .shape-2 { width: 150px; height: 150px; bottom: 20%; right: 10%; animation-duration: 15s; }
-        .shape-3 { width: 60px; height: 60px; top: 40%; left: 80%; animation-duration: 8s; }
-        .shape-4 { width: 200px; height: 200px; top: -50px; right: 30%; animation-duration: 20s; opacity: 0.05; }
-        .shape-5 { width: 80px; height: 80px; bottom: 5%; left: 20%; animation-duration: 10s; background: rgba(255, 215, 0, 0.15); }
-
-        @keyframes floatAnimation {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(20deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
-
-        .swiper-ticker .swiper-wrapper { transition-timing-function: linear; }
-        .hover-scale:hover { transform: scale(1.05); transition: transform 0.3s; }
-        .hero-pagination .swiper-pagination-bullet { background: white; opacity: 0.5; width: 10px; height: 10px; }
-        .hero-pagination .swiper-pagination-bullet-active { background: #fbbf24; opacity: 1; width: 25px; border-radius: 5px; transition: width 0.3s; }
-        /* FIN ESTILOS DE PÁGINA DE INICIO */
-    </style>
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s;
+    }
+  </style>
 </head>
-<body class="text-gray-800 min-h-screen">
+<body class="text-gray-800">
 
-    <div id="closedStoreOverlay" class="closed-overlay select-none">
-        <div id="adminSecretLock" class="absolute top-5 right-5 text-gray-300 cursor-pointer p-2 opacity-30 hover:opacity-100 z-50">
-            <i class="fas fa-lock fa-lg"></i>
-        </div>
-
-        <div class="relative w-full max-w-lg h-full flex flex-col justify-center items-center">
-            
-            <div class="absolute top-10 text-center w-full px-4">
-                <h2 class="text-2xl font-black text-purple-800 mb-1 uppercase tracking-wide">¡Aún estamos cerrados!</h2>
-                <p class="text-gray-500 text-sm font-bold mb-2">Reservas a partir de las 8:00 AM</p>
-                <div class="inline-block bg-yellow-400 text-purple-900 font-black px-4 py-1 rounded-full text-sm shadow-md">
-                    SCORE: <span id="gameScore">0</span>
-                </div>
-            </div>
-
-            <div class="relative w-full h-[300px] flex items-center justify-center bg-white overflow-hidden" id="gameContainer" onclick="jumpDino()">
-                <canvas id="dinoCanvas"></canvas>
-                
-                <div id="gameMessage" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 z-10">
-                    <p class="text-purple-800 font-black text-xl mb-2" id="msgTitle">¡JUEGA MIENTRAS ESPERAS!</p>
-                    <p class="text-gray-600 text-sm mb-4">Toca la pantalla para saltar</p>
-                    <button onclick="startGame()" class="bg-purple-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:scale-105 transition-transform animate-pulse">
-                        EMPEZAR A CORRER 🚀
-                    </button>
-                </div>
-            </div>
-
-            <p class="mt-8 text-gray-400 text-xs text-center px-6">
-                Próximo Bingo para el 8/12/25 - 7:00 PM<br>
-                ¡Partidas EN VIVO por Whatsapp!
-            </p>
-        </div>
+  <header class="bg-purple-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+    <h1 class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest">OMEGA Bingo</h1>
+    <div class="flex gap-2 md:gap-4">
+      <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base">Entrar</a>
+      <button onclick="scrollToSeccion('juegos')" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base">Juegos</button>
     </div>
+  </header>
+
+  <section class="bg-[#1e0030] py-3 border-b-4 border-yellow-500 overflow-hidden">
+    <div class="swiper swiper-ticker w-full">
+      <div class="swiper-wrapper">
+        
+        <div class="swiper-slide w-auto px-6">
+            <a href="https://chat.whatsapp.com/tu-enlace-aqui" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+                <div class="text-left leading-tight">
+                    <p class="text-white font-bold text-sm">Maria L.</p>
+                    <p class="text-yellow-400 text-xs font-bold uppercase">Bingo 75</p>
+                    <p class="text-white font-black text-sm">Ganó $120</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="swiper-slide w-auto px-6">
+            <a href="https://tusitio.com/juego2" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+                <div class="text-left leading-tight">
+                    <p class="text-white font-bold text-sm">Carlos R.</p>
+                    <p class="text-yellow-400 text-xs font-bold uppercase">Ruleta</p>
+                    <p class="text-white font-black text-sm">Ganó $500</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="swiper-slide w-auto px-6">
+            <a href="https://tusitio.com/juego3" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+                <div class="text-left leading-tight">
+                    <p class="text-white font-bold text-sm">Ana P.</p>
+                    <p class="text-yellow-400 text-xs font-bold uppercase">Tragamonedas</p>
+                    <p class="text-white font-black text-sm">Ganó $1.200</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="swiper-slide w-auto px-6">
+            <a href="https://tusitio.com/juego4" target="_blank" class="flex items-center gap-3 group text-decoration-none cursor-pointer">
+                <img src="https://randomuser.me/api/portraits/men/85.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform object-cover" alt="Ganador">
+                <div class="text-left leading-tight">
+                    <p class="text-white font-bold text-sm">Luis G.</p>
+                    <p class="text-yellow-400 text-xs font-bold uppercase">Blackjack</p>
+                    <p class="text-white font-black text-sm">Ganó $350</p>
+                </div>
+            </a>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  <section class="bg-purple-100 py-12 text-center px-4" id="inicio">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-purple-900">¡Bienvenido a OMEGA Bingo!</h2>
+    <p class="text-lg mb-8 max-w-2xl mx-auto">Reserva tus tablas, participa en nuestros juegos y únete a nuestro grupo de WhatsApp para estar al día.</p>
+    <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-full font-bold shadow-lg uppercase text-white text-xl transition transform hover:scale-105 inline-block">Reservar Ahora</a>
+  </section>
+   
+  <section class="py-12 px-4 bg-white" id="juegos">
+    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Grupos y Juegos</h3>
     
-    <div id="adminPanel" class="admin-panel hidden">
-        <div class="max-w-4xl mx-auto">
-            <div id="adminLogin" class="text-center">
-                <h3 class="text-2xl font-bold mb-4 text-purple-900">Acceso de Administrador</h3>
-                <input type="email" id="adminEmail" placeholder="Correo" class="p-2 border rounded mb-2 w-full max-w-sm">
-                <input type="password" id="adminPassword" placeholder="Contraseña" class="p-2 border rounded mb-4 w-full max-w-sm">
-                <button onclick="adminLogin()" class="bg-blue-600 text-white p-2 rounded w-full max-w-sm">Entrar</button>
-            </div>
-
-            <div id="adminDashboard" class="hidden">
-                <div class="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-md">
-                    <h2 class="text-3xl font-extrabold text-purple-900">Panel de Control</h2>
-                    <button onclick="adminLogout()" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded">Cerrar Sesión</button>
-                </div>
-
-                <div id="reservasList" class="space-y-4">
-                    <h3 class="text-xl font-bold text-gray-700 mb-4">Reservas Pendientes</h3>
-                    <p class="text-gray-500" id="loadingReservas">Cargando reservas...</p>
-                </div>
-            </div>
+    <div class="swiper mySwiperGroups max-w-6xl mx-auto px-4 pb-12">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+          <img src="grupoa.jpeg" onerror="this.src='https://via.placeholder.com/300x200?text=Grupo+A'" class="w-full h-48 object-cover rounded mb-4" alt="Grupo A" />
+          <h4 class="text-xl font-bold mb-2">Grupo A - Tarde</h4>
+          <p class="mb-4 text-sm text-gray-600">Únete a nuestro grupo para participar en los sorteos de la tarde.</p>
+          <a href="https://chat.whatsapp.com/CIL8NiFHcbvAQwEw9Xwfiq" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
         </div>
-    </div>
 
-    <div id="mainContent">
-        <header class="bg-purple-900 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
-            <h1 class="text-2xl md:text-3xl font-extrabold uppercase tracking-widest">OMEGA Bingo</h1>
-            <div class="flex gap-2 md:gap-4">
-                <a href="#reservas" class="bg-green-500 hover:bg-green-600 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base transition">Reservar</a>
-                <button onclick="scrollToSeccion('juegos')" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded font-bold uppercase shadow-lg text-sm md:text-base transition">Grupos</button>
-            </div>
-        </header>
-
-        <section class="bg-[#1e0030] py-3 border-b-4 border-yellow-500 overflow-hidden relative z-20">
-            <div class="swiper swiper-ticker w-full">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide w-auto px-6"><a href="#" class="flex items-center gap-3 group"><img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador"><div class="text-left leading-tight"><p class="text-white font-bold text-sm">Yajaira</p><p class="text-yellow-400 text-xs font-bold uppercase">Bingo 75</p><p class="text-white font-black text-sm">Ganó Bs6,000</p></div></a></div>
-                    <div class="swiper-slide w-auto px-6"><a href="#" class="flex items-center gap-3 group"><img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador"><div class="text-left leading-tight"><p class="text-white font-bold text-sm">Carlos R.</p><p class="text-yellow-400 text-xs font-bold uppercase">Ruleta</p><p class="text-white font-black text-sm">Ganó $500</p></div></a></div>
-                    <div class="swiper-slide w-auto px-6"><a href="#" class="flex items-center gap-3 group"><img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-12 h-12 rounded-full border-2 border-yellow-400" alt="Ganador"><div class="text-left leading-tight"><p class="text-white font-bold text-sm">Sue</p><p class="text-yellow-400 text-xs font-bold uppercase">Lineas</p><p class="text-white font-black text-sm">Ganó Bs1,500</p></div></a></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="hero-section py-8 md:py-12 relative" id="inicio">
-            
-            <div class="floating-shape shape-1"></div>
-            <div class="floating-shape shape-2"></div>
-            <div class="floating-shape shape-3"></div>
-            <div class="floating-shape shape-4"></div>
-            <div class="floating-shape shape-5"></div>
-
-            <div class="container mx-auto px-4 relative z-10">
-                
-                <div class="text-center mb-6">
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-white drop-shadow-lg">
-                        ¡Bienvenido a <span class="text-yellow-400">OMEGA Bingo</span>!
-                    </h2>
-                    <p class="text-purple-200 mt-2 text-lg">Los mejores juegos y premios te esperan</p>
-                </div>
-
-                <div class="swiper hero-swiper w-full rounded-2xl shadow-2xl overflow-hidden border-4 border-white/20">
-                    <div class="swiper-wrapper">
-                        
-                        <div class="swiper-slide relative">
-                            <a href="#reservas" class="block w-full h-full relative">
-                                <img src="banneromega1.png" class="w-full h-64 md:h-96 object-cover" alt="Promo 1">
-                                
-                                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-                                    <button class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold py-3 px-8 rounded-full shadow-lg uppercase text-lg transition hover:scale-105 animate-bounce">
-                                        ¡Comprar Tablas!
-                                    </button>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="#juegos" class="block w-full h-full">
-                                <img src="https://via.placeholder.com/1200x500/c026d3/ffffff?text=GRAN+SORTEO+NAVIDEÑO" class="w-full h-64 md:h-96 object-cover" alt="Promo 2">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="https://wa.me/tu-numero" target="_blank" class="block w-full h-full">
-                                <img src="https://via.placeholder.com/1200x500/2563eb/ffffff?text=ÚNETE+AL+GRUPO+VIP" class="w-full h-64 md:h-96 object-cover" alt="Promo 3">
-                            </a>
-                        </div>
-
-                    </div>
-                    
-                    <div class="swiper-pagination hero-pagination"></div>
-                    <div class="swiper-button-next text-white/70 hover:text-white"></div>
-                    <div class="swiper-button-prev text-white/70 hover:text-white"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <hr>
-
-        <section id="reservas" class="py-12 bg-white px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <h3 class="text-3xl font-extrabold text-purple-900 mb-8">
-                    Comprar Tablas de Bingo <i class="fas fa-ticket-alt text-yellow-500"></i>
-                </h3>
-                <div class="bg-purple-50 p-6 rounded-lg shadow-inner mb-8">
-                    <p class="text-purple-700 font-bold text-lg mb-2">Próximo Sorteo:</p>
-                    <div id="nextDrawInfo" class="text-gray-600">Cargando...</div>
-                    <div id="countdownTimer" class="omega-title mt-4 text-4xl">00:00:00</div>
-                </div>
-
-                <div id="tableSelection" class="grid grid-cols-5 md:grid-cols-10 gap-2 p-4 border border-purple-200 rounded-lg bg-gray-50">
-                    <p class="col-span-full text-gray-500">Selecciona tus números. Cargando la tabla...</p>
-                </div>
-                
-                <div class="flex justify-between items-center bg-purple-100 p-4 rounded-lg mt-6 shadow-md">
-                    <div class="text-left">
-                        <p class="text-sm text-purple-800 font-bold">Total Tablas Seleccionadas:</p>
-                        <p class="text-3xl font-black text-purple-900" id="selectedCount">0</p>
-                    </div>
-                    <button onclick="openReservationModal()" id="reserveButton" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform hover:scale-105 disabled:bg-gray-400" disabled>
-                        Confirmar Reserva
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <hr>
-
-        <section class="py-12 px-4 bg-white" id="juegos">
-            <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Nuestras Salas</h3>
-            
-            <div class="swiper mySwiperGroups max-w-6xl mx-auto px-4 pb-12">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
-                        <img src="grupoa.jpeg" onerror="this.src='https://via.placeholder.com/300x200?text=Grupo+A'" class="w-full h-48 object-cover rounded mb-4" alt="Grupo A" />
-                        <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo A - Tarde</h4>
-                        <p class="mb-4 text-sm text-gray-600">Únete a nuestro grupo para participar en los sorteos de la tarde.</p>
-                        <a href="https://chat.whatsapp.com/CIL8NiFHcbvAQwEw9Xwfiq" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
-                    </div>
-                    <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
-                        <img src="https://via.placeholder.com/300x200.png?text=Grupo+B" class="w-full h-48 object-cover rounded mb-4" alt="Grupo B" />
-                        <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo B - Noche</h4>
-                        <p class="mb-4 text-sm text-gray-600">Participa en sorteos nocturnos y promociones exclusivas.</p>
-                        <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
-                    </div>
-                    <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale border border-gray-200">
-                        <img src="https://via.placeholder.com/300x200.png?text=Grupo+C" class="w-full h-48 object-cover rounded mb-4" alt="Grupo C" />
-                        <h4 class="text-xl font-bold mb-2 text-purple-900">Grupo C - VIP</h4>
-                        <p class="mb-4 text-sm text-gray-600">Mesas de alto valor y premios rápidos.</p>
-                        <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold shadow transition">Entrar en WhatsApp</a>
-                    </div>
-                </div>
-                
-                <div class="swiper-button-next text-purple-900"></div>
-                <div class="swiper-button-prev text-purple-900"></div>
-                <div class="swiper-pagination"></div>
-            </div>
-        </section>
-
-        <hr>
-
-        <section class="py-12 bg-purple-50 px-4" id="ganadores">
-            <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Últimos Ganadores</h3>
-            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-4">
-                <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition flex items-center gap-4 border-l-4 border-green-500" onclick="mostrarGanador('Juan Pérez', 'https://via.placeholder.com/400x300?text=Comprobante', '¡Increíble, pagaron al instante!')">
-                    <div class="bg-green-100 p-4 rounded-full text-green-600 text-2xl font-bold">JP</div>
-                    <div>
-                        <p class="font-bold text-lg text-gray-800">Juan Pérez</p>
-                        <p class="text-gray-500 text-sm italic">"Participé en el último sorteo y gané Bs. 500."</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-xl transition flex items-center gap-4 border-l-4 border-blue-500">
-                    <div class="bg-blue-100 p-4 rounded-full text-blue-600 text-2xl font-bold">MR</div>
-                    <div>
-                        <p class="font-bold text-lg text-gray-800">María Rodriguez</p>
-                        <p class="text-gray-500 text-sm italic">"La atención es muy rápida y segura."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <footer class="bg-purple-900 text-white py-10 px-4 text-center mt-auto border-t-4 border-yellow-500">
-            <h2 class="text-3xl font-extrabold mb-4 tracking-widest">OMEGA BINGO</h2>
-            
-            <div class="flex justify-center gap-6 mb-6 text-sm text-purple-300">
-                <button onclick="showLegalModal('terms')" class="hover:text-white transition">Términos y Condiciones</button>
-                <button onclick="showLegalModal('privacy')" class="hover:text-white transition">Política de Privacidad</button>
-            </div>
-            
-            <p class="text-purple-200 mb-8">&copy; 2025. Todos los derechos reservados.</p>
-            <div class="flex justify-center gap-8 text-xl">
-                <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:text-green-400 transition transform hover:-translate-y-1"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="#" class="hover:text-blue-400 transition transform hover:-translate-y-1"><i class="fab fa-facebook"></i> Facebook</a>
-                <a href="#" class="hover:text-pink-400 transition transform hover:-translate-y-1"><i class="fab fa-instagram"></i> Instagram</a>
-            </div>
-        </footer>
-    </div>
-    
-    <div id="modalGanador" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4 backdrop-blur-sm">
-        <div class="bg-white p-6 rounded-2xl max-w-md w-full relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
-            <button class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold transition" onclick="cerrarGanador()">&times;</button>
-            <h4 class="text-2xl font-bold mb-4 text-center text-purple-900" id="nombreGanador"></h4>
-            <div class="flex justify-center mb-4 bg-gray-100 rounded-lg p-2">
-                <img src="" alt="Capture" class="max-h-64 object-contain" id="imagenGanador" />
-            </div>
-            <p class="text-center text-gray-700 italic border-t pt-4" id="comentarioGanador"></p>
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+          <img src="https://via.placeholder.com/300x200.png?text=Grupo+B" class="w-full h-48 object-cover rounded mb-4" alt="Grupo B" />
+          <h4 class="text-xl font-bold mb-2">Grupo B - Noche</h4>
+          <p class="mb-4 text-sm text-gray-600">Participa en sorteos nocturnos y promociones exclusivas.</p>
+          <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
         </div>
+
+        <div class="swiper-slide bg-gray-100 rounded-lg shadow-lg p-4 hover-scale">
+            <img src="https://via.placeholder.com/300x200.png?text=Grupo+C" class="w-full h-48 object-cover rounded mb-4" alt="Grupo C" />
+            <h4 class="text-xl font-bold mb-2">Grupo C - VIP</h4>
+            <p class="mb-4 text-sm text-gray-600">Mesas de alto valor y premios rápidos.</p>
+            <a href="#" target="_blank" class="block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded text-center font-bold">Entrar en WhatsApp</a>
+          </div>
+      </div>
+      
+      <div class="swiper-button-next text-purple-900"></div>
+      <div class="swiper-button-prev text-purple-900"></div>
+      <div class="swiper-pagination"></div>
     </div>
+  </section>
 
-    <div id="reservationModal" class="modal">
-        <div class="modal-content">
-            <button onclick="closeReservationModal()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold transition">&times;</button>
-            <h4 class="text-2xl font-bold mb-4 text-center text-purple-900">Finalizar Reserva</h4>
-            <p class="text-center mb-4">Has seleccionado <span id="finalCount" class="font-black text-purple-700">0</span> tablas. Precio Total: <span id="finalPrice" class="font-black text-green-600">Bs. 0.00</span></p>
-
-            <form id="reservationForm" class="space-y-4">
-                <input type="text" id="clientName" placeholder="Tu Nombre Completo" required class="p-3 border rounded-lg w-full focus:ring-purple-500 focus:border-purple-500">
-                <input type="tel" id="clientPhone" placeholder="Número de WhatsApp (Ej: 58412xxxxxxx)" required class="p-3 border rounded-lg w-full focus:ring-purple-500 focus:border-purple-500">
-                
-                <h5 class="font-bold text-purple-800 mt-6 border-t pt-4">Método de Pago:</h5>
-                <p class="text-sm text-gray-600 bg-yellow-100 p-2 rounded-md">Realiza el pago antes de confirmar.</p>
-                <textarea id="paymentProof" placeholder="Escribe el número de referencia del Pago Móvil o Zelle/PayPal." required class="p-3 border rounded-lg w-full focus:ring-purple-500 focus:border-purple-500 h-20"></textarea>
-
-                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 w-full rounded-lg shadow-lg transition-transform hover:scale-[1.01]">
-                    CONFIRMAR Y ENVIAR <i class="fas fa-paper-plane ml-2"></i>
-                </button>
-            </form>
-            <p id="reservationMessage" class="mt-4 text-center hidden font-bold"></p>
+  <section class="py-12 bg-purple-50 px-4" id="ganadores">
+    <h3 class="text-3xl font-extrabold text-center mb-8 text-purple-900">Testimonios</h3>
+    <div class="max-w-4xl mx-auto grid gap-4">
+      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 flex items-center gap-4 transition" onclick="mostrarGanador('Juan Pérez', 'https://via.placeholder.com/400x300?text=Comprobante', '¡Increíble, pagaron al instante!')">
+        <div class="bg-green-100 p-3 rounded-full text-green-600 text-2xl font-bold">JD</div>
+        <div>
+            <p class="font-bold text-lg">Juan Pérez</p>
+            <p class="text-gray-600">"Participé en el último sorteo y gané Bs. 500. ¡100% recomendado!"</p>
         </div>
-    </div>
-    
-    <div id="legalModal" class="modal">
-        <div class="modal-legal-content">
-            <button onclick="hideLegalModal()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold transition">&times;</button>
-            <h4 class="text-2xl font-bold mb-2 text-center text-purple-900" id="legalModalTitle"></h4>
-            <div class="modal-legal-body" id="legalModalBody">
-                </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-50 flex items-center gap-4 transition">
+        <div class="bg-blue-100 p-3 rounded-full text-blue-600 text-2xl font-bold">MR</div>
+        <div>
+            <p class="font-bold text-lg">María Rodriguez</p>
+            <p class="text-gray-600">"La atención es muy rápida y segura."</p>
         </div>
+      </div>
     </div>
+  </section>
 
-    <script>
-        // ==========================================================
-        // ============== FUNCIONES GENERALES DE UI ==============
-        // ==========================================================
+  <div id="modalGanador" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white p-6 rounded-lg max-w-md w-full relative shadow-2xl animate-fade-in-down">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-3xl font-bold" onclick="cerrarGanador()">&times;</button>
+      <h4 class="text-2xl font-bold mb-4 text-center text-purple-800" id="nombreGanador"></h4>
+      <div class="flex justify-center mb-4">
+          <img src="" alt="Capture" class="max-h-64 rounded shadow border" id="imagenGanador" />
+      </div>
+      <p class="text-center italic text-gray-700" id="comentarioGanador"></p>
+    </div>
+  </div>
 
-        const TABLE_PRICE = 50; // Ejemplo: Bs. 50 por tabla
-        let selectedNumbers = [];
-        let bingoNumbersState = {}; // Para el estado de Firebase
+  <footer class="bg-purple-900 text-white py-8 px-4 text-center">
+    <h2 class="text-2xl font-bold mb-4">OMEGA Bingo</h2>
+    <p class="text-purple-200 mb-6">&copy; 2025 OMEGA Bingo. Todos los derechos reservados.</p>
+    <div class="flex justify-center gap-6 text-2xl">
+      <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:text-green-400 transition"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      <a href="#" class="hover:text-blue-400 transition">Facebook</a>
+      <a href="#" class="hover:text-pink-400 transition">Instagram</a>
+    </div>
+  </footer>
 
-        // Función scroll suave
-        function scrollToSeccion(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+  <script>
+    // 1. Configuración de la Nueva Barra de Ganadores (Ticker)
+    const swiperTicker = new Swiper('.swiper-ticker', {
+      slidesPerView: 'auto', // Ajusta automáticamente el ancho
+      spaceBetween: 0,       // Sin espacio extra, lo manejamos con padding en el slide
+      loop: true,            // Infinito
+      speed: 4000,           // Velocidad lenta y constante
+      autoplay: {
+        delay: 0,            // Sin pausa
+        disableOnInteraction: false, // Sigue rodando aunque toques
+      },
+      allowTouchMove: true,  // Permite arrastrar si el usuario quiere
+    });
 
-        // Funciones del Modal de Ganador (Original)
-        function mostrarGanador(nombre, imagenUrl, comentario) {
-            document.getElementById('nombreGanador').innerText = nombre;
-            document.getElementById('imagenGanador').src = imagenUrl;
-            document.getElementById('comentarioGanador').innerText = comentario;
-            const modal = document.getElementById('modalGanador');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-        function cerrarGanador() {
-            const modal = document.getElementById('modalGanador');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-        
-        // Inicialización de Swipers (Sliders)
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Ticker de ganadores (Barra superior)
-            new Swiper('.swiper-ticker', {
-                slidesPerView: 'auto', spaceBetween: 0, loop: true, speed: 4000,
-                autoplay: { delay: 0, disableOnInteraction: false }, allowTouchMove: true,
-            });
+    // 2. Configuración del Carrusel de Grupos
+    const swiperGroups = new Swiper('.mySwiperGroups', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }
+    });
 
-            // 2. Slider Hero (Banner Grande)
-            new Swiper('.hero-swiper', {
-                slidesPerView: 1, loop: true, effect: 'fade', fadeEffect: { crossFade: true },
-                autoplay: { delay: 5000, disableOnInteraction: false },
-                pagination: { el: ".hero-pagination", clickable: true },
-                navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-            });
+    // Función scroll
+    function scrollToSeccion(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
 
-            // 3. Slider de Grupos
-            new Swiper('.mySwiperGroups', {
-                slidesPerView: 1, spaceBetween: 20, loop: true,
-                pagination: { el: ".swiper-pagination", clickable: true },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
-            });
+    // Funciones Modal
+    function mostrarGanador(nombre, imagenUrl, comentario) {
+      document.getElementById('nombreGanador').innerText = nombre;
+      document.getElementById('imagenGanador').src = imagenUrl;
+      document.getElementById('comentarioGanador').innerText = comentario;
+      const modal = document.getElementById('modalGanador');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
 
-            // Cargar datos de Firebase y habilitar funcionalidad
-            setupFirebaseFeatures();
-        });
-
-
-        // ==========================================================
-        // ============== FUNCIONES DE RESERVAS (FIREBASE) ==============
-        // ==========================================================
-        
-        // 1. Renderizar la tabla de números
-        function renderBingoTable() {
-            const tableContainer = document.getElementById('tableSelection');
-            tableContainer.innerHTML = '';
-            
-            for (let i = 1; i <= 75; i++) {
-                const status = bingoNumbersState[i] || 'available'; // available, reserved, sold
-                
-                const numberDiv = document.createElement('div');
-                numberDiv.className = `card-item-container status-${status} select-none`;
-                
-                // Si el estado es 'available', permite la selección
-                if (status === 'available') {
-                    numberDiv.onclick = () => toggleNumberSelection(i);
-                } else if (status === 'reserved') {
-                    // Muestra el nombre o un indicador de quién lo tiene reservado
-                    const reservedBy = bingoNumbersState[`reservedBy_${i}`] || 'Reservado';
-                    numberDiv.title = reservedBy;
-                }
-
-                numberDiv.innerHTML = `
-                    <div class="bingo-ball-reserved-page">${i}</div>
-                    <span class="ver-tag">${status === 'available' ? 'Elegir' : status.toUpperCase()}</span>
-                `;
-                
-                tableContainer.appendChild(numberDiv);
-            }
-            updateReservationUI();
-        }
-
-        // 2. Manejar la selección del usuario
-        function toggleNumberSelection(number) {
-            const index = selectedNumbers.indexOf(number);
-            
-            if (index > -1) {
-                // Deseleccionar
-                selectedNumbers.splice(index, 1);
-            } else {
-                // Seleccionar
-                selectedNumbers.push(number);
-            }
-            // Volver a renderizar para actualizar visualmente
-            renderBingoTable();
-        }
-
-        // 3. Actualizar UI de reserva (contador y botón)
-        function updateReservationUI() {
-            const count = selectedNumbers.length;
-            const totalPrice = count * TABLE_PRICE;
-            
-            document.getElementById('selectedCount').textContent = count;
-            document.getElementById('reserveButton').disabled = count === 0;
-            
-            // Renderizar la tabla para marcar los seleccionados visualmente
-            const numberElements = document.getElementById('tableSelection').children;
-            for (let i = 0; i < numberElements.length; i++) {
-                const number = i + 1;
-                const element = numberElements[i];
-                
-                if (selectedNumbers.includes(number)) {
-                    element.classList.remove('status-available');
-                    element.classList.add('status-selected');
-                } else if (bingoNumbersState[number] === 'available') {
-                    element.classList.remove('status-selected');
-                    element.classList.add('status-available');
-                }
-            }
-        }
-        
-        // 4. Abrir Modal de Confirmación
-        function openReservationModal() {
-            const count = selectedNumbers.length;
-            const totalPrice = count * TABLE_PRICE;
-
-            document.getElementById('finalCount').textContent = count;
-            document.getElementById('finalPrice').textContent = `Bs. ${totalPrice.toFixed(2)}`;
-            document.getElementById('reservationModal').style.display = 'flex';
-        }
-
-        // 5. Cerrar Modal de Confirmación
-        function closeReservationModal() {
-            document.getElementById('reservationModal').style.display = 'none';
-            document.getElementById('reservationMessage').classList.add('hidden');
-            document.getElementById('reservationForm').reset();
-        }
-        
-        // 6. Enviar Reserva (FIREBASE)
-        document.getElementById('reservationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const msgElement = document.getElementById('reservationMessage');
-
-            msgElement.classList.add('hidden');
-
-            const reservationData = {
-                name: form.clientName.value,
-                phone: form.clientPhone.value,
-                paymentProof: form.paymentProof.value,
-                numbers: selectedNumbers.sort((a, b) => a - b),
-                count: selectedNumbers.length,
-                totalPrice: selectedNumbers.length * TABLE_PRICE,
-                status: 'PENDIENTE',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                // 1. Verificar y actualizar estado en Firebase (optimista/transaccional)
-                const batch = db.batch();
-                const now = new Date().toISOString();
-                
-                reservationData.numbers.forEach(number => {
-                    const numberRef = db.collection('bingo_numbers').doc(String(number));
-                    
-                    // Actualizar el número como 'reserved' para este usuario
-                    batch.update(numberRef, {
-                        status: 'reserved',
-                        reserved_by_name: reservationData.name,
-                        reserved_by_phone: reservationData.phone,
-                        reserved_at: now
-                    });
-                });
-                
-                // 2. Guardar la reserva completa
-                const docRef = db.collection('reservations').doc();
-                batch.set(docRef, reservationData);
-
-                await batch.commit();
-
-                // 3. Éxito: Mostrar mensaje, limpiar y celebrar
-                msgElement.textContent = `¡Reserva de ${reservationData.count} tablas enviada con éxito! Revisa WhatsApp para la confirmación.`;
-                msgElement.classList.remove('hidden');
-                msgElement.classList.remove('text-red-500');
-                msgElement.classList.add('text-green-600');
-                
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-
-                form.reset();
-                selectedNumbers = []; // Limpiar selección local
-                // La tabla se actualizará automáticamente con el listener de Firebase
-
-            } catch (error) {
-                console.error("Error al enviar la reserva o actualizar números:", error);
-                msgElement.textContent = "Error al confirmar. Intenta de nuevo o contacta soporte.";
-                msgElement.classList.remove('hidden');
-                msgElement.classList.remove('text-green-600');
-                msgElement.classList.add('text-red-500');
-            }
-        });
-        
-        
-        // ==========================================================
-        // ============== FUNCIONES DE JUEGO (DINO GAME) ==============
-        // ==========================================================
-
-        const canvas = document.getElementById('dinoCanvas');
-        const ctx = canvas.getContext('2d');
-        const GAME_WIDTH = 480;
-        const GAME_HEIGHT = 300;
-        canvas.width = GAME_WIDTH;
-        canvas.height = GAME_HEIGHT;
-        let gameLoop;
-        let isGameOver = false;
-        let score = 0;
-        let isGameStarted = false;
-
-        class Dino {
-            constructor() {
-                this.x = 50;
-                this.y = GAME_HEIGHT - 30;
-                this.width = 20;
-                this.height = 30;
-                this.velocityY = 0;
-                this.gravity = 1;
-                this.isJumping = false;
-            }
-            draw() {
-                ctx.fillStyle = '#4c00ff'; // Morado oscuro
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-            }
-            update() {
-                this.velocityY += this.gravity;
-                this.y += this.velocityY;
-
-                if (this.y > GAME_HEIGHT - this.height) {
-                    this.y = GAME_HEIGHT - this.height;
-                    this.velocityY = 0;
-                    this.isJumping = false;
-                }
-            }
-            jump() {
-                if (!this.isJumping) {
-                    this.isJumping = true;
-                    this.velocityY = -20;
-                }
-            }
-        }
-
-        class Cactus {
-            constructor(x) {
-                this.x = x;
-                this.y = GAME_HEIGHT - 40;
-                this.width = 20;
-                this.height = 40;
-                this.speed = 5;
-            }
-            draw() {
-                ctx.fillStyle = '#10b981'; // Verde
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-            }
-            update() {
-                this.x -= this.speed;
-            }
-        }
-
-        let dino = new Dino();
-        let cacti = [];
-        let timeSinceLastCactus = 0;
-        const cactusInterval = 100;
-
-        function startGame() {
-            if (isGameStarted) return;
-            isGameStarted = true;
-            isGameOver = false;
-            score = 0;
-            dino = new Dino();
-            cacti = [];
-            document.getElementById('gameMessage').style.display = 'none';
-            gameLoop = setInterval(updateGame, 1000 / 60);
-        }
-
-        function gameOver() {
-            isGameOver = true;
-            isGameStarted = false;
-            clearInterval(gameLoop);
-            document.getElementById('msgTitle').textContent = `Juego Terminado. Tu Score: ${score}`;
-            document.getElementById('gameMessage').style.display = 'flex';
-        }
-
-        function updateGame() {
-            if (isGameOver) return;
-
-            // Clear canvas
-            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-            // Update dino
-            dino.update();
-            dino.draw();
-
-            // Spawn cacti
-            timeSinceLastCactus++;
-            if (timeSinceLastCactus > cactusInterval) {
-                cacti.push(new Cactus(GAME_WIDTH));
-                timeSinceLastCactus = 0;
-            }
-
-            // Update and draw cacti
-            cacti.forEach((cactus, index) => {
-                cactus.update();
-                cactus.draw();
-
-                // Collision detection
-                if (dino.x < cactus.x + cactus.width &&
-                    dino.x + dino.width > cactus.x &&
-                    dino.y < cactus.y + cactus.height &&
-                    dino.y + dino.height > cactus.y) {
-                    gameOver();
-                }
-
-                // Remove off-screen cacti
-                if (cactus.x + cactus.width < 0) {
-                    cacti.splice(index, 1);
-                    score++;
-                    document.getElementById('gameScore').textContent = score;
-                }
-            });
-
-            // Draw ground line
-            ctx.strokeStyle = '#5b21b6'; // Morado
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, GAME_HEIGHT);
-            ctx.lineTo(GAME_WIDTH, GAME_HEIGHT);
-            ctx.stroke();
-        }
-
-        function jumpDino() {
-            if (isGameStarted) {
-                dino.jump();
-            }
-        }
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && isGameStarted) {
-                jumpDino();
-                e.preventDefault();
-            }
-        });
-        
-        // ==========================================================
-        // ============== FUNCIONES DE FIREBASE Y ADMIN ==============
-        // ==========================================================
-        
-        // Escuchar cambios en la base de datos para la tabla de números
-        function listenToBingoNumbers() {
-            db.collection("bingo_numbers").onSnapshot((snapshot) => {
-                let newState = {};
-                snapshot.forEach(doc => {
-                    const number = parseInt(doc.id);
-                    newState[number] = doc.data().status;
-                    // También guardar info de quién reservó (si aplica)
-                    if (doc.data().status === 'reserved') {
-                        newState[`reservedBy_${number}`] = doc.data().reserved_by_name || 'Reservado';
-                    }
-                });
-                bingoNumbersState = newState;
-                renderBingoTable();
-            });
-        }
-        
-        // Escuchar cambios en las reservas para el panel de admin
-        function listenToReservations() {
-            db.collection("reservations").where("status", "==", "PENDIENTE").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-                const list = document.getElementById('reservasList');
-                list.innerHTML = `<h3 class="text-xl font-bold text-gray-700 mb-4">Reservas Pendientes</h3>`; // Limpiar la lista
-                
-                if (snapshot.empty) {
-                    list.innerHTML += '<p class="p-4 bg-yellow-100 rounded-lg text-yellow-800 font-bold">No hay reservas pendientes.</p>';
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const item = document.createElement('div');
-                    item.className = 'bg-white p-4 rounded-lg shadow-md border-l-4 border-orange-500';
-                    item.innerHTML = `
-                        <p class="font-bold text-lg text-purple-900">${data.name}</p>
-                        <p class="text-sm text-gray-600">Teléfono: ${data.phone}</p>
-                        <p class="text-sm text-gray-600">Tablas: <span class="font-bold text-orange-600">${data.count}</span> (${data.numbers.join(', ')})</p>
-                        <p class="text-sm text-gray-600">Monto: <span class="font-bold text-green-600">Bs. ${data.totalPrice.toFixed(2)}</span></p>
-                        <p class="text-xs mt-2 italic">Ref: ${data.paymentProof}</p>
-                        <button onclick="confirmReservation('${doc.id}', [${data.numbers.join(', ')}])" class="mt-3 bg-green-500 hover:bg-green-600 text-white p-2 rounded text-sm"><i class="fas fa-check"></i> Confirmar</button>
-                    `;
-                    list.appendChild(item);
-                });
-            });
-        }
-
-        // Acción de confirmar reserva (Admin)
-        async function confirmReservation(reservationId, numbers) {
-            if (!confirm(`¿Estás seguro de confirmar la reserva #${reservationId}? Esto marcará las tablas como 'SOLD'.`)) return;
-
-            const batch = db.batch();
-            
-            // 1. Marcar la Reserva como 'CONFIRMADA'
-            const reservationRef = db.collection('reservations').doc(reservationId);
-            batch.update(reservationRef, { status: 'CONFIRMADA' });
-
-            // 2. Marcar los Números como 'sold'
-            numbers.forEach(number => {
-                const numberRef = db.collection('bingo_numbers').doc(String(number));
-                batch.update(numberRef, { status: 'sold' });
-            });
-
-            try {
-                await batch.commit();
-                alert('Reserva confirmada y tablas marcadas como vendidas.');
-            } catch (error) {
-                console.error("Error al confirmar reserva:", error);
-                alert('Hubo un error al confirmar la reserva. Revisa la consola.');
-            }
-        }
-        
-        // Control de Acceso Admin
-        function adminLogin() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert('Acceso de Administrador Exitoso');
-                    // El listener de auth lo maneja
-                })
-                .catch(error => {
-                    alert('Error de autenticación: ' + error.message);
-                });
-        }
-
-        function adminLogout() {
-            auth.signOut().then(() => {
-                alert('Sesión cerrada.');
-                // El listener de auth lo maneja
-            });
-        }
-        
-        // Listener de estado de autenticación (Maneja la visibilidad del panel)
-        auth.onAuthStateChanged(user => {
-            const adminLoginDiv = document.getElementById('adminLogin');
-            const adminDashboardDiv = document.getElementById('adminDashboard');
-            const mainContentDiv = document.getElementById('mainContent');
-            const adminPanelDiv = document.getElementById('adminPanel');
-
-            if (user) {
-                // Usuario logueado (Admin)
-                adminLoginDiv.classList.add('hidden');
-                adminDashboardDiv.classList.remove('hidden');
-                mainContentDiv.classList.add('hidden');
-                adminPanelDiv.classList.remove('hidden');
-                listenToReservations(); // Empezar a escuchar reservas
-            } else {
-                // Usuario deslogueado (Cliente)
-                adminLoginDiv.classList.remove('hidden');
-                adminDashboardDiv.classList.add('hidden');
-                mainContentDiv.classList.remove('hidden');
-                adminPanelDiv.classList.add('hidden');
-            }
-        });
-        
-        // Inicializar todas las funcionalidades de Firebase
-        function setupFirebaseFeatures() {
-            listenToBingoNumbers(); // Clientes ven la tabla de números
-            
-            // Lógica para mostrar/ocultar el juego si la tienda está abierta/cerrada
-            // NOTA: Debes implementar la lógica real de tiempo de apertura aquí. 
-            // Por ahora, solo se usa el overlay para el juego.
-            const storeOpen = true; // CAMBIA ESTO CON LA LÓGICA DE HORA REAL
-            const closedOverlay = document.getElementById('closedStoreOverlay');
-            const mainContent = document.getElementById('mainContent');
-            
-            if (storeOpen) {
-                closedOverlay.style.display = 'none';
-                mainContent.style.display = 'block';
-            } else {
-                closedOverlay.style.display = 'flex';
-                mainContent.style.display = 'none';
-                // Iniciar el juego si está cerrado
-                // Se inicia el juego al hacer clic en el botón EMPEZAR A CORRER
-            }
-
-            // Secreto para entrar al Admin
-            document.getElementById('adminSecretLock').onclick = () => {
-                mainContent.style.display = 'none';
-                closedOverlay.style.display = 'none';
-                document.getElementById('adminPanel').classList.remove('hidden');
-            };
-        }
-
-
-        // ==========================================================
-        // ============== FUNCIONES LEGALES (MODALES) ==============
-        // ==========================================================
-        
-        const legalContent = {
-            terms: `
-                <h2 class="text-xl font-bold text-gray-900 mb-3">Términos y Condiciones del Servicio OMEGA Bingo</h2>
-                <p class="text-xs text-gray-500 mb-4">Última actualización: 04/12/25</p>
-                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">3. Jurisdicción y Uso Legal (Venezuela / EEUU)</h3>
-                <ul class="list-disc list-inside space-y-1 ml-4">
-                    <li><strong>Riesgo:</strong> La participación es bajo su propio riesgo. OMEGA Bingo no se hace responsable por cualquier pérdida incurrida.</li>
-                </ul>
-                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">5. Uso del Código y Licencia</h3>
-                <p>El código fuente y los elementos de diseño (imágenes, logos, etc.) de esta plataforma son propiedad privada de OMEGA Bingo Masson© o sus licenciatarios. Queda terminantemente prohibida la copia, reproducción, distribución, ingeniería inversa o cualquier uso no autorizado del código privado de la página web sin el consentimiento expreso y por escrito de los propietarios de OMEGA Bingo.</p>
-                `,
-            privacy: `
-                <h2 class="text-xl font-bold text-gray-900 mb-3">Política de Privacidad de OMEGA Bingo</h2>
-                <p class="text-xs text-gray-500 mb-4">Última actualización: 4/12/25</p>
-                <h3 class="font-bold text-lg text-purple-700 mt-4 mb-2">3. Almacenamiento y Seguridad de los Datos (Clave de Confianza)</h3>
-                <ul class="list-disc list-inside space-y-1 ml-4">
-                    <li><strong>Alojamiento Seguro:</strong> Todos los datos y documentos de verificación (comprobantes de pago) se almacenan en servidores seguros operados por proveedores de servicios certificados.</li>
-                    <li><strong>Cifrado:</strong> Utilizamos el cifrado de datos (SSL/TLS) para proteger la transmisión de datos.</li>
-                    <li><strong>Gestión de Documentos:</strong> Los comprobantes de clientes se almacenan en un sistema de gestión de documentos seguro e interno (Cloudinary privado).</li>
-                </ul>
-                `
-        };
-
-        function showLegalModal(type) {
-            const modal = document.getElementById('legalModal');
-            const title = document.getElementById('legalModalTitle');
-            const body = document.getElementById('legalModalBody');
-
-            if (type === 'terms') {
-                title.textContent = 'Términos y Condiciones';
-                body.innerHTML = legalContent.terms;
-            } else if (type === 'privacy') {
-                title.textContent = 'Política de Privacidad';
-                body.innerHTML = legalContent.privacy;
-            } else {
-                return;
-            }
-            
-            modal.style.display = 'flex';
-        }
-
-        function hideLegalModal() {
-            document.getElementById('legalModal').style.display = 'none';
-        }
-    </script>
+    function cerrarGanador() {
+      const modal = document.getElementById('modalGanador');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  </script>
 </body>
 </html>
