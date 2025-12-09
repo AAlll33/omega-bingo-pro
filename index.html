@@ -243,13 +243,30 @@
   </div>
 
   <footer class="bg-purple-900 text-white py-10 px-4 text-center mt-auto border-t-4 border-yellow-500">
-    <h2 class="text-3xl font-extrabold mb-4 tracking-widest">OMEGA BINGO</h2>
-    <p class="text-purple-200 mb-8">&copy; 2025. Todos los derechos reservados.</p>
-    <div class="flex justify-center gap-8 text-xl">
-      <a href="https://wa.me/584xxxxxxxxx" target="_blank" class="hover:text-green-400 transition transform hover:-translate-y-1">WhatsApp</a>
-      <a href="#" class="hover:text-blue-400 transition transform hover:-translate-y-1">Facebook</a>
-      <a href="#" class="hover:text-pink-400 transition transform hover:-translate-y-1">Instagram</a>
-    </div>
+            <div class="mt-12 text-center">
+                <img src="logo-omega-bingo.png" id="footer-logo" class="mx-auto w-24 rounded-full shadow-lg bg-white p-1" alt="Logo">
+                <h3 class="text-xl font-bold text-white mb-4">Síguenos en Redes Sociales</h3>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://wa.me/584226431972" target="_blank" class="text-white hover:text-green-400 transition-colors" title="WhatsApp">
+                        <i class="fab fa-whatsapp fa-3x" style="color:#25D366;"></i>
+                    </a>
+                    <a href="https://www.facebook.com/OmegabingoAA/" target="_blank" class="text-white hover:text-blue-600 transition-colors" title="Facebook">
+                        <i class="fab fa-facebook fa-3x"></i>
+                    </a>
+                    <a href="https://www.instagram.com/omega_bingo?igsh=MTY4czZ0NDltZ2gxZA==" target="_blank" class="text-white hover:text-pink-600 transition-colors" title="Instagram">
+                        <i class="fab fa-instagram fa-3x"></i>
+                    </a>
+                </div>
+
+                <div class="flex justify-center space-x-4 mb-6 text-sm">
+                    <button onclick="showLegalModal('terms')" class="text-yellow-300 font-bold hover:underline">Términos y Condiciones</button>
+                    <span class="text-purple-300">|</span>
+                    <button onclick="showLegalModal('privacy')" class="text-yellow-300 font-bold hover:underline">Política de Privacidad</button>
+                </div>
+
+                <p class="text-xs text-purple-200 mt-4">© OMEGA Bingo / Masson 2025. Todos los derechos reservados</p>
+                <img src="logo-masson-bingo.png" id="footer-logo-masson" class="h-auto w-16 inline-block" alt="logo">
+            </div>
   </footer>
 
   <script>
